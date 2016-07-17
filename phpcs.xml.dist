@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset>
+    <description>Coding Standard</description>
+
+    <file>./src/</file>
+    <file>./loader/</file>
+    <file>./importer-runner.php</file>
+</ruleset>

@@ -1,0 +1,50 @@
+sudo: false
+
+language: php
+
+php:
+    - '5.6'
+    - '7.0'
+    - hhvm
+
+matrix:
+    fast_finish: true
+    allow_failures:
+        - php: hhvm
+
+cache:
+    directories:
+        - node_modules
+        - $HOME/.composer/cache/files
+
+before_install:
+    - rm -rf "$HOME/.nvm"
+    - git clone https://github.com/creationix/nvm.git "$HOME/.nvm"
+    - source "$HOME/.nvm/nvm.sh"
+    - nvm install node
+    - npm config set progress false
+    - npm install -g npm
+    - |
+        if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then
+            phpenv config-rm xdebug.ini
+        fi
+    - composer self-update
+
+install:
+    - npm install
+    - composer install --prefer-source
+
+script:
+    - npm run-script lint-ci
+    - composer test-ci
+
+notifications:
+    email: false
+
+    slack:
+        on_pull_requests: false
+        on_start: never
+        on_success: never
+        on_failure: change
+        rooms:
+            - secure: YBTMn2RJYsD3sT01jEy/dRQQNmIGHABGkCFX+ZRWtwrF0sYHZjtSzR1R9k1yFmsEwPZlnYua5Yns4MTeZES5TVtv8xQCR8s3ccEt/YevTba1X5rpSlHvQ2EVIey3poBGK7y01Pkz5g3607iwlw4yin6Y/+679MUX+myNpVWoW/x4Z4+WcGV12xepvM/xIZxe4hSfESvQB/ZSw/AAUg/dvGMQYbrNK0vupfONRA1o23YJrijlN53hGYiTqfMXTAyz/Pb4zSm4ErkZkvPbdb3Rfs9lqEpfPL7D304WFWXRmhUY4dVdOSnGNmei49cVEQd8CwVrxVxtq4Q1cSGSTs5Jf+8JX1Xx0faO8CWM4ZA2xfuvWHso3YL5AgvgCfeC0AkK78Llh6Z27JjGZbV/9ISe6v5xCQGE/9/B1tJGDKG4i9mCeqG/q/MV/LdSssmZVZPIoy0h7XdKF+NWkR+izY7r2HNlD4P8+OAHGH+q40Y0s5oBytDSVhlvsN/jR4rdD8Pg46F9t3GUBsgJS5zwlsq/boEQrbhspm99l07cG9ZUDx0eFCcJ5kkipQSnVQI8/waMUcySSkI+tNEpFaQpzG5eMmc4pyK/H2AlmBS3c5rkUETt4KXqak1q42+UxlLCXHeM+W95UNnDgFsjlAzyRVNNyABDYU3/g5yCTbjgiYkwews=
