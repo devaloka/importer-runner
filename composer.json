@@ -9,6 +9,7 @@
     ],
     "homepage"         : "https://github.com/devaloka/importer-runner",
     "license"          : [
+        "MIT",
         "GPL-2.0",
         "GPL-3.0"
     ],
